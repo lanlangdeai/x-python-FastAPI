@@ -35,4 +35,5 @@ pip freeze > requirements.txt
 ## 涉及技术点
 - 引入Python3.6+中的类型提示功能,基于pydantic库实现
 - pydantic-数据验证
-- SQLAlchemy-数据库ORM
+- SQLAlchemy-数据库ORM(https://docs.sqlalchemy.org/en/20/)
+- PyMySQL-mysql库
