@@ -12,3 +12,14 @@ class Blog(Base):
     title = Column(String(32))
     content = Column(String(255))
     published = Column(Boolean)
+
+
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(32))
+    password = Column(String(32))
+    age = Column(Integer)
+    gender = Column(String(32))
+
+

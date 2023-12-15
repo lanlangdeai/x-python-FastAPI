@@ -1,10 +1,11 @@
 import http
-from typing import Optional
+from typing import Optional, List
 
 from fastapi import FastAPI, Depends
 
+import db.schemas
 from db.database import engine, SessionLocal
-from db.models import Base, Blog as BlogModel
+from db.models import Base, Blog as BlogModel, User as UserModel
 from db.schemas import Blog as BlogValidator
 from sqlalchemy.orm.session import Session
 
@@ -79,9 +80,38 @@ def blog_list(page: Optional[int] = 1, page_size: Optional[int] = 10, is_publish
     """
     query = db.query(BlogModel).filter(BlogModel.published == is_published)
     total = query.count()
-    offset = (page-1) * page_size
+    offset = (page - 1) * page_size
     lists = query.offset(offset).limit(page_size).all()
     return {
         "total": total,
         "list": lists
     }
+
+
+@app.get("/blog/detail")
+def blog_detail(id: int, db: Session = Depends(get_db)):
+    blog = db.query(BlogModel).filter_by(id=id).first()
+    return blog
+
+
+@app.delete("/blog/{id}")
+def blog_del(id: int, db: Session = Depends(get_db)):
+    db.query(BlogModel).filter_by(id=id).delete(synchronize_session=False)
+    db.commit()
+    return {"msg": "success"}
+
+
+@app.put("/blog/{id}")
+def blog_update(id: int, param: BlogValidator, db: Session = Depends(get_db)):
+    db.query(BlogModel).filter_by(id=id).update(param.model_dump())
+    db.commit()
+    return {"msg": "success"}
+
+
+# =================================== 用户
+
+
+@app.get("/user/list", response_model=List[db.schemas.ShowUser])  # 只返回指定字段
+def user_list(db: Session = Depends(get_db)):
+    users = db.query(UserModel).all()
+    return users
