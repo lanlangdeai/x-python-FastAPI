@@ -3,6 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+# 定义入参
 class Blog(BaseModel):
     title: str
     content: str

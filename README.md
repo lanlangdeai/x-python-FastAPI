@@ -2,6 +2,14 @@
 python的Web框架之Fastapi
 
 
+## 待优化
+- [ ] 统一返回值(验证+最终响应)
+- [ ] 日志处理(支持分割)
+- [ ] 项目结构优化
+
+
+
+
 
 **Python版本: 3.10**
 
@@ -53,3 +61,8 @@ pip freeze > requirements.txt
 * 健壮：可以编写出线上使用的代码，并且会自动生成交互式文档；
 * 标准化：兼容 API 相关开放标准；
 
+
+
+参考文档:
+- https://mp.weixin.qq.com/s/sA61QotzueIpvaVPGiUrAQ
+- 
