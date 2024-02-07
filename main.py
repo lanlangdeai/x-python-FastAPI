@@ -8,7 +8,10 @@ import orjson
 import db.schemas
 from db.database import engine, SessionLocal
 from db.models import Base, Blog as BlogModel, User as UserModel
-from db.schemas import Blog as BlogValidator
+from db.schemas import (
+    Blog as BlogValidator,
+    User as UserValidator,
+)
 from sqlalchemy.orm.session import Session
 
 app = FastAPI(title="x-python-FastAPI",
@@ -34,7 +37,44 @@ async def index():
 
 
 
-@app.get("/text/response")
+# 获取form表单中数据
+
+
+@app.post("/test/param-check")
+async def param_check(param: UserValidator):
+    print(param)
+    return Response()
+
+# 自定义参数校验
+@app.post("/test/param-custom-check")
+async def custom_param_check(request: Request):
+    data = await request.body()  # 获取最原始的字节流
+
+    try:
+        data = orjson.loads(data)
+    except orjson.JSONDecodeError:
+        result = {"error": "非JSON"}
+        return Response(
+            orjson.dumps(result),
+            status_code=404,
+            media_type="application/json"
+        )
+
+    result = {
+        "name": data.get("name"),
+        "age": data.get("age"),
+    }
+
+
+    return Response(
+        orjson.dumps(result),
+        media_type="application/json"
+    )
+
+
+
+
+@app.get("/test/response")
 async def test_response():
     data = {
         "name": "ixng",
@@ -42,9 +82,17 @@ async def test_response():
     }
 
     response = Response(
-
+        # 响应内容
+        orjson.dumps(data),
+        # 状态码
+        201,
+        # headers头
+        {"Token": "xxx"},
+        "application/json"
     )
-
+    response.headers['ping'] = "pong"
+    response.set_cookie("SessionID", "sss")
+    return response
 
 @app.get("/request/info")
 async def request_info(request: Request):

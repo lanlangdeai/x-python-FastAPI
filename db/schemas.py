@@ -1,7 +1,7 @@
 from typing import Optional
 
 from pydantic import BaseModel
-
+from fastapi import Query
 
 # 定义入参
 class Blog(BaseModel):
@@ -15,7 +15,7 @@ class User(BaseModel):
     username: str
     password: str
     age: int
-    gender: str
+    gender: Optional[str] = Query(...)
 
 class ShowUser(BaseModel):
     username: str
